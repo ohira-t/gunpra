@@ -46,3 +46,8 @@ body::before {
 @utility touch-none {
   touch-action: none;
 }
+
+/* Prevent page-level zoom on iOS Safari so pinch only affects the image */
+.react-transform-wrapper {
+  touch-action: none;
+}

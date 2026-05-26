@@ -1,10 +1,10 @@
 "use client";
 
 import { useState, useCallback, useMemo } from "react";
-import Image from "next/image";
 import type { Step } from "@/data/zeta-gundam";
 import { RunnerBadge } from "./runner-badge";
 import { RunnerImage } from "./runner-image";
+import { ZoomableImage } from "./zoomable-image";
 
 export function StepView({
   step,
@@ -77,15 +77,11 @@ export function StepView({
 
       {/* Scrollable content */}
       <div className="flex-1 overflow-y-auto px-4 pb-4">
-        {/* Step instruction image */}
-        <div className="mb-4 rounded-xl overflow-hidden bg-white">
-          <Image
-            src={`/steps/step-${step.step}.png`}
-            alt={`Step ${step.step} 組立図`}
-            width={800}
-            height={400}
-            className="w-full h-auto"
-            priority
+        {/* Manual page image - pinch to zoom */}
+        <div className="mb-4">
+          <ZoomableImage
+            src={`/manual/page-${step.manualPage}.jpg`}
+            alt={`説明書 ページ${step.manualPage}`}
           />
         </div>
 

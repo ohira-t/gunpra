@@ -8,6 +8,7 @@ export interface Step {
   step: number;
   name: string;
   nameEn: string;
+  manualPage: number;
   parts: Part[];
 }
 
@@ -33,6 +34,7 @@ export const zetaGundam: KitData = {
       step: 1,
       name: "ボディ",
       nameEn: "BODY",
+      manualPage: 1,
       parts: [
         { runner: "E1", number: 31 },
         { runner: "PC", number: 4 },
@@ -64,6 +66,7 @@ export const zetaGundam: KitData = {
       step: 2,
       name: "頭部",
       nameEn: "HEAD",
+      manualPage: 1,
       parts: [
         { runner: "A", number: 1 },
         { runner: "B1", number: 21 },
@@ -80,6 +83,7 @@ export const zetaGundam: KitData = {
       step: 3,
       name: "腕部（共通）",
       nameEn: "ARMS",
+      manualPage: 1,
       parts: [
         { runner: "E1", number: 34 },
         { runner: "E2", number: 34 },
@@ -120,6 +124,7 @@ export const zetaGundam: KitData = {
       step: 4,
       name: "右腕",
       nameEn: "RIGHT ARM",
+      manualPage: 1,
       parts: [
         { runner: "E1", number: 29 },
       ],
@@ -128,6 +133,7 @@ export const zetaGundam: KitData = {
       step: 5,
       name: "左腕",
       nameEn: "LEFT ARM",
+      manualPage: 1,
       parts: [
         { runner: "E1", number: 28 },
       ],
@@ -136,6 +142,7 @@ export const zetaGundam: KitData = {
       step: 7,
       name: "足",
       nameEn: "FEET",
+      manualPage: 2,
       parts: [
         { runner: "E1", number: 49 },
         { runner: "E2", number: 49 },
@@ -153,6 +160,7 @@ export const zetaGundam: KitData = {
       step: 8,
       name: "右脚",
       nameEn: "RIGHT LEG",
+      manualPage: 2,
       parts: [
         { runner: "E1", number: 40 },
         { runner: "E1", number: 48 },
@@ -181,6 +189,7 @@ export const zetaGundam: KitData = {
       step: 9,
       name: "左脚",
       nameEn: "LEFT LEG",
+      manualPage: 2,
       parts: [
         { runner: "E2", number: 48 },
         { runner: "E2", number: 40 },
@@ -209,6 +218,7 @@ export const zetaGundam: KitData = {
       step: 10,
       name: "腰部",
       nameEn: "WAIST",
+      manualPage: 3,
       parts: [
         { runner: "B1", number: 11 },
         { runner: "E1", number: 45 },
@@ -231,12 +241,14 @@ export const zetaGundam: KitData = {
       step: 11,
       name: "全体組立",
       nameEn: "FULL ASSEMBLY",
+      manualPage: 3,
       parts: [],
     },
     {
       step: 12,
       name: "シールド",
       nameEn: "SHIELD",
+      manualPage: 3,
       parts: [
         { runner: "D", number: 3 },
         { runner: "D", number: 4 },
@@ -262,6 +274,7 @@ export const zetaGundam: KitData = {
       step: 13,
       name: "武器",
       nameEn: "WEAPONS",
+      manualPage: 4,
       parts: [
         { runner: "D", number: 7 },
         { runner: "E1", number: 8 },
