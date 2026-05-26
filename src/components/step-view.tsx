@@ -125,8 +125,13 @@ export function StepView({
                   </div>
                 </button>
 
-                {/* Runner image (expandable) */}
-                {isExpanded && <RunnerImage runner={runner} />}
+                {/* Runner image (expandable) with highlighted parts */}
+                {isExpanded && (
+                  <RunnerImage
+                    runner={runner}
+                    highlightParts={items.map((i) => i.part.number)}
+                  />
+                )}
 
                 {/* Parts in this runner */}
                 <div className="p-2 grid grid-cols-3 gap-1.5">
