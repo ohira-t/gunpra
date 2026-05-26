@@ -1,25 +1,26 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
+import Image from "next/image";
 import type { Step } from "@/data/zeta-gundam";
 import { RunnerBadge } from "./runner-badge";
+import { RunnerImage } from "./runner-image";
 
 export function StepView({
   step,
-  totalSteps,
   onPrev,
   onNext,
   isFirst,
   isLast,
 }: {
   step: Step;
-  totalSteps: number;
   onPrev: () => void;
   onNext: () => void;
   isFirst: boolean;
   isLast: boolean;
 }) {
   const [checked, setChecked] = useState<Set<number>>(new Set());
+  const [expandedRunner, setExpandedRunner] = useState<string | null>(null);
 
   const toggle = useCallback((index: number) => {
     setChecked((prev) => {
@@ -30,42 +31,43 @@ export function StepView({
     });
   }, []);
 
+  const grouped = useMemo(() => {
+    const map = new Map<string, { part: typeof step.parts[0]; index: number }[]>();
+    step.parts.forEach((part, index) => {
+      const list = map.get(part.runner) ?? [];
+      list.push({ part, index });
+      map.set(part.runner, list);
+    });
+    return map;
+  }, [step.parts]);
+
   const allChecked = checked.size === step.parts.length;
   const progress = step.parts.length > 0 ? checked.size / step.parts.length : 0;
 
   const handleNext = () => {
     setChecked(new Set());
+    setExpandedRunner(null);
     onNext();
   };
-
   const handlePrev = () => {
     setChecked(new Set());
+    setExpandedRunner(null);
     onPrev();
   };
-
-  const runnerGroups = new Map<string, number>();
-  for (const part of step.parts) {
-    runnerGroups.set(part.runner, (runnerGroups.get(part.runner) ?? 0) + (part.quantity ?? 1));
-  }
 
   return (
     <div className="flex flex-col h-full">
       {/* Header */}
-      <div className="px-4 pt-4 pb-3">
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-muted text-sm">
-            STEP {step.step}
-          </span>
-          <span className="text-muted text-sm">
-            {checked.size}/{step.parts.length} パーツ
-          </span>
+      <div className="px-4 pt-3 pb-2">
+        <div className="flex items-center justify-between mb-1">
+          <span className="text-muted text-sm">STEP {step.step}</span>
+          <span className="text-muted text-sm">{checked.size}/{step.parts.length}</span>
         </div>
         <h2 className="text-2xl font-bold">
           {step.name}
           <span className="text-muted text-sm font-normal ml-2">{step.nameEn}</span>
         </h2>
-        {/* Progress bar */}
-        <div className="mt-3 h-1.5 bg-surface rounded-full overflow-hidden">
+        <div className="mt-2 h-1.5 bg-surface rounded-full overflow-hidden">
           <div
             className="h-full bg-accent transition-all duration-300 rounded-full"
             style={{ width: `${progress * 100}%` }}
@@ -73,33 +75,75 @@ export function StepView({
         </div>
       </div>
 
-      {/* Runner summary */}
-      <div className="px-4 pb-2">
-        <div className="flex flex-wrap gap-1.5">
-          {Array.from(runnerGroups.entries()).map(([runner, count]) => (
-            <span
-              key={runner}
-              className="text-xs px-2 py-1 rounded-lg bg-surface text-muted"
-            >
-              {runner} x{count}
-            </span>
-          ))}
-        </div>
-      </div>
-
-      {/* Parts grid */}
+      {/* Scrollable content */}
       <div className="flex-1 overflow-y-auto px-4 pb-4">
-        <div className="grid grid-cols-2 gap-2">
-          {step.parts.map((part, i) => (
-            <RunnerBadge
-              key={`${part.runner}-${part.number}-${i}`}
-              runner={part.runner}
-              number={part.number}
-              quantity={part.quantity}
-              checked={checked.has(i)}
-              onToggle={() => toggle(i)}
-            />
-          ))}
+        {/* Step instruction image */}
+        <div className="mb-4 rounded-xl overflow-hidden bg-white">
+          <Image
+            src={`/steps/step-${step.step}.png`}
+            alt={`Step ${step.step} 組立図`}
+            width={800}
+            height={400}
+            className="w-full h-auto"
+            priority
+          />
+        </div>
+
+        {/* Parts grouped by runner */}
+        <div className="flex flex-col gap-4">
+          {Array.from(grouped.entries()).map(([runner, items]) => {
+            const allInGroupChecked = items.every((i) => checked.has(i.index));
+            const isExpanded = expandedRunner === runner;
+
+            return (
+              <div key={runner} className="rounded-xl border border-border overflow-hidden">
+                {/* Runner header - tap to show runner image */}
+                <button
+                  onClick={() => setExpandedRunner(isExpanded ? null : runner)}
+                  className={`
+                    w-full flex items-center justify-between px-4 py-3 text-left
+                    transition-colors
+                    ${allInGroupChecked ? "bg-success/10" : "bg-surface"}
+                  `}
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="font-mono font-black text-xl">{runner}</span>
+                    <span className="text-muted text-sm">
+                      {items.length}パーツ
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {allInGroupChecked && (
+                      <span className="text-success text-xs font-bold">完了</span>
+                    )}
+                    <svg
+                      className={`w-4 h-4 text-muted transition-transform ${isExpanded ? "rotate-180" : ""}`}
+                      fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </div>
+                </button>
+
+                {/* Runner image (expandable) */}
+                {isExpanded && <RunnerImage runner={runner} />}
+
+                {/* Parts in this runner */}
+                <div className="p-2 grid grid-cols-3 gap-1.5">
+                  {items.map(({ part, index }) => (
+                    <RunnerBadge
+                      key={`${part.runner}-${part.number}-${index}`}
+                      runner={part.runner}
+                      number={part.number}
+                      quantity={part.quantity}
+                      checked={checked.has(index)}
+                      onToggle={() => toggle(index)}
+                    />
+                  ))}
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
 
@@ -118,10 +162,7 @@ export function StepView({
           disabled={isLast}
           className={`
             flex-1 py-3 rounded-xl font-bold transition-all active:scale-95
-            ${allChecked
-              ? "bg-success text-white"
-              : "bg-accent text-white"
-            }
+            ${allChecked ? "bg-success text-white" : "bg-accent text-white"}
             disabled:opacity-30
           `}
         >

@@ -32,47 +32,33 @@ export function RunnerBadge({
     <button
       onClick={onToggle}
       className={`
-        relative flex items-center gap-2 px-4 py-3 rounded-xl border text-left
+        relative flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-lg border
         transition-all duration-200 select-none
         ${color}
-        ${checked ? "opacity-40 line-through scale-95" : "hover:scale-[1.02] active:scale-95"}
+        ${checked ? "opacity-35 scale-95" : "active:scale-95"}
       `}
     >
       <div
         className={`
-          w-5 h-5 rounded-md border-2 flex-shrink-0 flex items-center justify-center
+          w-4 h-4 rounded flex-shrink-0 flex items-center justify-center border
           transition-colors duration-200
-          ${checked ? "bg-success border-success" : "border-current/40"}
+          ${checked ? "bg-success border-success" : "border-current/30"}
         `}
       >
         {checked && (
-          <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+          <svg className="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
           </svg>
         )}
       </div>
-      <span className="font-mono font-bold text-lg">{runner}</span>
-      <span className="font-mono text-2xl font-black">{number}</span>
+      <span className={`font-mono font-black text-lg ${checked ? "line-through" : ""}`}>
+        {number}
+      </span>
       {quantity && quantity > 1 && (
-        <span className="text-xs font-bold bg-white/10 rounded-full px-2 py-0.5">
+        <span className="text-[10px] font-bold bg-white/10 rounded-full px-1.5 py-0.5">
           x{quantity}
         </span>
       )}
     </button>
-  );
-}
-
-export function RunnerLegend() {
-  return (
-    <div className="flex flex-wrap gap-2">
-      {Object.entries(RUNNER_COLORS).map(([runner, color]) => (
-        <span
-          key={runner}
-          className={`text-xs px-2 py-1 rounded border ${color}`}
-        >
-          {runner}
-        </span>
-      ))}
-    </div>
   );
 }

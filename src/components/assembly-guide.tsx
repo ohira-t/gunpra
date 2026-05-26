@@ -65,7 +65,6 @@ export function AssemblyGuide({ kit }: { kit: KitData }) {
 
       <StepView
         step={currentStep}
-        totalSteps={steps.length}
         onPrev={() => setCurrentIndex((i) => Math.max(0, i - 1))}
         onNext={() => setCurrentIndex((i) => Math.min(steps.length - 1, i + 1))}
         isFirst={currentIndex === 0}
