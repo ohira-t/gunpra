@@ -4,12 +4,12 @@ import Image from "next/image";
 import { RUNNER_PART_POSITIONS } from "@/data/runner-part-positions";
 
 const RUNNER_IMAGES: Record<string, { width: number; height: number; ext?: string }> = {
-  A: { width: 500, height: 603 },
-  B1: { width: 500, height: 439 },
+  A: { width: 800, height: 850, ext: "jpg" },
+  B1: { width: 1500, height: 850, ext: "jpg" },
   B2: { width: 740, height: 480, ext: "jpg" },
   C1: { width: 1100, height: 698, ext: "jpg" },
-  C2: { width: 450, height: 480 },
-  D: { width: 500, height: 400 },
+  C2: { width: 500, height: 580, ext: "jpg" },
+  D: { width: 900, height: 850, ext: "jpg" },
   E1: { width: 790, height: 687, ext: "jpg" },
   E2: { width: 560, height: 450, ext: "jpg" },
   PC: { width: 480, height: 508, ext: "jpg" },
