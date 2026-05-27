@@ -1,10 +1,10 @@
 "use client";
 
 import { useState, useCallback, useMemo } from "react";
+import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import type { Step } from "@/data/zeta-gundam";
 import { RunnerBadge } from "./runner-badge";
 import { RunnerImage } from "./runner-image";
-import { ZoomableImage } from "./zoomable-image";
 
 export function StepView({
   step,
@@ -21,6 +21,7 @@ export function StepView({
 }) {
   const [checked, setChecked] = useState<Set<number>>(new Set());
   const [expandedRunner, setExpandedRunner] = useState<string | null>(null);
+  const [showManual, setShowManual] = useState(false);
 
   const toggle = useCallback((index: number) => {
     setChecked((prev) => {
@@ -47,11 +48,13 @@ export function StepView({
   const handleNext = () => {
     setChecked(new Set());
     setExpandedRunner(null);
+    setShowManual(false);
     onNext();
   };
   const handlePrev = () => {
     setChecked(new Set());
     setExpandedRunner(null);
+    setShowManual(false);
     onPrev();
   };
 
@@ -77,14 +80,28 @@ export function StepView({
 
       {/* Scrollable content */}
       <div className="flex-1 overflow-y-auto px-4 pb-4">
-        {/* Manual page image - pinch to zoom */}
-        <div className="-mx-4 mb-4">
-          <ZoomableImage
+        {/* Manual page thumbnail - tap to open fullscreen */}
+        <button
+          onClick={() => setShowManual(true)}
+          className="relative w-full rounded-xl overflow-hidden bg-white mb-4 block text-left"
+        >
+          <img
             src={`/manual/page-${step.manualPage}.jpg`}
             alt={`説明書 ページ${step.manualPage}`}
-            aspectRatio={step.manualPage === 1 ? "2094 / 3030" : "2451 / 3461"}
+            className="w-full h-auto block"
+            style={{ maxHeight: "30vh", objectFit: "cover", objectPosition: "top" }}
           />
-        </div>
+          <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-white/80 to-transparent" />
+          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-black/60 text-white text-xs px-3 py-1.5 rounded-full pointer-events-none flex items-center gap-1.5">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              <line x1="11" y1="8" x2="11" y2="14" />
+              <line x1="8" y1="11" x2="14" y2="11" />
+            </svg>
+            タップで拡大
+          </div>
+        </button>
 
         {/* Parts grouped by runner */}
         <div className="flex flex-col gap-4">
@@ -171,6 +188,44 @@ export function StepView({
           {allChecked ? "完了 → 次へ" : "次へ"}
         </button>
       </div>
+
+      {/* Manual page fullscreen modal */}
+      {showManual && (
+        <div className="fixed inset-0 z-50 bg-black flex flex-col">
+          <div className="flex items-center justify-between px-4 py-3 shrink-0">
+            <span className="text-white/50 text-sm">ピンチで拡大できます</span>
+            <button
+              onClick={() => setShowManual(false)}
+              className="text-white/80 w-10 h-10 flex items-center justify-center rounded-full active:bg-white/10"
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+          </div>
+          <div className="flex-1 min-h-0">
+            <TransformWrapper
+              initialScale={1}
+              minScale={1}
+              maxScale={5}
+              centerOnInit
+            >
+              <TransformComponent
+                wrapperStyle={{ width: "100%", height: "100%" }}
+                contentStyle={{ width: "100%" }}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={`/manual/page-${step.manualPage}.jpg`}
+                  alt={`説明書 ページ${step.manualPage}`}
+                  style={{ width: "100%", height: "auto", display: "block" }}
+                />
+              </TransformComponent>
+            </TransformWrapper>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
