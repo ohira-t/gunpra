@@ -3,17 +3,17 @@
 import Image from "next/image";
 import { RUNNER_PART_POSITIONS } from "@/data/runner-part-positions";
 
-const RUNNER_IMAGES: Record<string, { width: number; height: number }> = {
+const RUNNER_IMAGES: Record<string, { width: number; height: number; ext?: string }> = {
   A: { width: 500, height: 603 },
   B1: { width: 500, height: 439 },
-  B2: { width: 300, height: 240 },
-  C1: { width: 500, height: 530 },
+  B2: { width: 740, height: 480, ext: "jpg" },
+  C1: { width: 1100, height: 698, ext: "jpg" },
   C2: { width: 450, height: 480 },
   D: { width: 500, height: 400 },
-  E1: { width: 500, height: 296 },
-  E2: { width: 500, height: 562 },
-  PC: { width: 410, height: 630 },
-  "SB-13": { width: 500, height: 330 },
+  E1: { width: 790, height: 687, ext: "jpg" },
+  E2: { width: 560, height: 450, ext: "jpg" },
+  PC: { width: 480, height: 508, ext: "jpg" },
+  "SB-13": { width: 605, height: 170, ext: "jpg" },
 };
 
 export function RunnerImage({
@@ -38,7 +38,7 @@ export function RunnerImage({
     <div className="relative bg-white p-2 border-t border-b border-border">
       <div className="relative">
         <Image
-          src={`/runners/${runner}.png`}
+          src={`/runners/${runner}.${dims.ext ?? "png"}`}
           alt={`${runner}ランナー`}
           width={dims.width}
           height={dims.height}
