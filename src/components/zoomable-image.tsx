@@ -28,7 +28,6 @@ export function ZoomableImage({
         initialScale={1}
         minScale={1}
         maxScale={5}
-        centerOnInit
         onZoom={handleZoomChange}
         onPanning={handleZoomChange}
       >
