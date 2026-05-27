@@ -78,10 +78,11 @@ export function StepView({
       {/* Scrollable content */}
       <div className="flex-1 overflow-y-auto px-4 pb-4">
         {/* Manual page image - pinch to zoom */}
-        <div className="mb-4">
+        <div className="-mx-4 mb-4">
           <ZoomableImage
             src={`/manual/page-${step.manualPage}.jpg`}
             alt={`説明書 ページ${step.manualPage}`}
+            aspectRatio={step.manualPage === 1 ? "2094 / 3030" : "2451 / 3461"}
           />
         </div>
 

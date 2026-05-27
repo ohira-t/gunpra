@@ -21,8 +21,8 @@ export function ZoomableImage({
 
   return (
     <div
-      className="relative rounded-xl overflow-hidden bg-white"
-      style={{ aspectRatio, maxHeight: "60vh" }}
+      className="relative overflow-hidden bg-white"
+      style={{ aspectRatio }}
     >
       <TransformWrapper
         initialScale={1}
