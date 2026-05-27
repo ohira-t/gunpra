@@ -6,18 +6,24 @@ import { useCallback, useState } from "react";
 export function ZoomableImage({
   src,
   alt,
+  aspectRatio = "5 / 7",
 }: {
   src: string;
   alt: string;
+  aspectRatio?: string;
 }) {
   const [showHint, setShowHint] = useState(true);
+  const [loaded, setLoaded] = useState(false);
 
   const handleZoomChange = useCallback(() => {
     setShowHint(false);
   }, []);
 
   return (
-    <div className="relative rounded-xl overflow-hidden bg-white">
+    <div
+      className="relative rounded-xl overflow-hidden bg-white"
+      style={{ aspectRatio, maxHeight: "60vh" }}
+    >
       <TransformWrapper
         initialScale={1}
         minScale={1}
@@ -27,14 +33,21 @@ export function ZoomableImage({
         onPanning={handleZoomChange}
       >
         <TransformComponent
-          wrapperStyle={{ width: "100%", maxHeight: "60vh" }}
+          wrapperStyle={{ width: "100%", height: "100%" }}
           contentStyle={{ width: "100%" }}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={src}
             alt={alt}
-            style={{ width: "100%", height: "auto", display: "block" }}
+            onLoad={() => setLoaded(true)}
+            style={{
+              width: "100%",
+              height: "auto",
+              display: "block",
+              opacity: loaded ? 1 : 0,
+              transition: "opacity 0.2s",
+            }}
           />
         </TransformComponent>
       </TransformWrapper>
